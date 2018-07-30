@@ -11,16 +11,71 @@
 <body>
 	<h1>Using a public data set, we are creating a map with markers</h1>
 <div id="map"></div>
+<button onclick="myFunction()">Click Here</button>
+<p id="demo"></p>
+<form action="/action_page.php">
+	Address: <input type="text" name="userAddress" value="userAddress" id="userAddress">
+	<input type="submit" value="Submit">
+</form>
 </body>
 <script type="text/javascript">
 	$(window).load(function(){
 		url= 'https://data.cityofnewyork.us/resource/9w7m-hzhe.json';
-		var center = new google.maps.LatLng(40.7128,74.0060);
+		var center = new google.maps.LatLng(40.78509,-73.968285);
 		var mapOptions ={
 			zoom:8,
 			center: center
 		}
 		var map = new google.maps.Map(document.getElementById("map"),mapOptions);
-	})
+
+		var geoCoder = new google.maps.Geocoder();
+
+		$.getJSON(url, function(data,textstatus) {
+			$.each(data, function (i, entry){
+			var address = entry.building+" "+entry.street+" "+entry.boro+" "+entry.zipcode;
+			geoCoder.geocode({'address':address}, function(result,status) {
+				if (status === "OK"){
+					 varmarker = new google.maps.Marker({
+						position: result[0].geometry.location,
+						map: map, 
+						title: entry.dba
+
+					 	});
+					}
+				});
+			});
+		});
+	});
+	function myFunction(){
+							document.getElementById("demo").innerHTML="You have just clicked a button";
+						}
+	$(function() {
+		$("#addressSubmit").click (function(){
+			var center = new google.maps.LatLng(40.78509,-73.968285);
+		var mapOptions ={
+			zoom:8,
+			center: center
+}
+var userAddress 
+var geoCoder = new google.maps.Geocoder();
+
+		$.getJSON(url, function(data,textstatus) {
+			$.each(data, function (i, entry){
+			var address = entry.building+" "+entry.street+" "+entry.boro+" "+entry.zipcode;
+			geoCoder.geocode({'address':address}, function(result,status) {
+				if (status === "OK"){
+					 varmarker = new google.maps.Marker({
+						position: result[0].geometry.location,
+						map: map, 
+						title: entry.dba
+
+					 	});
+					}
+				});
+			});
+		});
+	});
+
+	}
 </script>
 </html>
